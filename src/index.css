@@ -28,8 +28,6 @@ body {
   background-color: var(--color-darkest);
   padding: 3.2rem;
   min-width: 325px;
-  display: flex;
-  justify-content: center;
 }
 
 .app {
@@ -41,16 +39,29 @@ body {
 
 .main {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
 }
 
 .app-header {
   width: 100%;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
+}
+.logo {
+  width: 10rem;
+}
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .logo {
+    width: 100%;
+    max-width: 8rem;
+  }
 }
 
 .error {
@@ -68,22 +79,22 @@ img {
 
 h1 {
   font-family: "Codystar";
-  font-size: 5.6rem;
+  font-size: 5rem;
 }
 
 h2 {
-  font-size: 3.6rem;
+  font-size: 3rem;
   margin-bottom: 2rem;
 }
 
 h3 {
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 600;
   margin-bottom: 4rem;
 }
 
 h4 {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 2.4rem;
 }
@@ -92,6 +103,7 @@ h4 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .progress {
@@ -204,7 +216,6 @@ progress {
   align-items: center;
   margin-top: 4rem;
   gap: 1.6rem;
-
   color: var(--color-medium);
   font-size: 1.4rem;
 }
