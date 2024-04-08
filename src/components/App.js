@@ -10,8 +10,9 @@ import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
 import Footer from "./Footer";
 import Timer from "./Timer";
+import questionsData from "../data/questions.json"; // Importar los datos
 
-const SECS_PER_QUESTION = 30; // Number of seconds per question
+const SECS_PER_QUESTION = 30; // Número de segundos por pregunta
 const initialState = {
   questions: [],
   // 'loading', 'error, 'ready', 'active', 'finished'
@@ -22,6 +23,7 @@ const initialState = {
   highscore: 0,
   secondsRemaining: null,
 };
+
 function reducer(state, action) {
   switch (action.type) {
     case "dataReceived":
@@ -42,7 +44,7 @@ function reducer(state, action) {
         secondsRemaining: state.questions.length * SECS_PER_QUESTION,
       };
     case "newAnswer":
-      const question = state.questions[state.index]; // Get the current question
+      const question = state.questions[state.index]; // Obtener la pregunta actual
       return {
         ...state,
         answer: action.payload,
@@ -57,55 +59,55 @@ function reducer(state, action) {
         index: state.index + 1,
         answer: null,
       };
-    case 'finish':
+    case "finish":
       return {
         ...state,
-        status: 'finished',
-        highscore: state.points > state.highscore ? state.points : state.highscore
-      }
-    case 'restart':
+        status: "finished",
+        highscore: state.points > state.highscore ? state.points : state.highscore,
+      };
+    case "restart":
       return {
         ...initialState,
         questions: state.questions,
-        status: 'ready'
-      }
-    case 'tick':
+        status: "ready",
+      };
+    case "tick":
       return {
         ...state,
         secondsRemaining: state.secondsRemaining - 1,
-        status: state.secondsRemaining === 0 ? 'finished' : state.status,
-      }
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
     default:
-      throw new Error("invalid action");
+      throw new Error("Acción inválida");
   }
 }
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState); // Use the reducer
-  const { questions, status, index, answer, points, highscore, secondsRemaining } = state; // Destructure the state
+  const [state, dispatch] = useReducer(reducer, initialState); // Utilizar el reducer
+  const { questions, status, index, answer, points, highscore, secondsRemaining } = state; // Desestructurar el estado
 
-  const questionsLenght = questions.length; // Get the number of questions
-  const maxPoints = questions.reduce((prev, cur) => prev + cur.points, 0); // Calculate the maximum points
-  useEffect(function () {
-    fetch("http://localhost:8000/questions")
-      .then((res) => res.json())
-      .then((data) => dispatch({ type: "dataReceived", payload: data }))
-      .catch((err) => dispatch({ type: "dataFailed" }));
+  const questionsLength = questions.length; // Obtener la cantidad de preguntas
+  const maxPoints = questions.reduce((prev, cur) => prev + cur.points, 0); // Calcular los puntos máximos
+  console.log(questionsLength)
+
+  useEffect(() => {
+    dispatch({ type: "dataReceived", payload: questionsData.questions }); // Simular la recepción de los datos
   }, []);
+
   return (
     <div className="app">
       <Header />
       <Main>
         {status === "loading" && <Loading />}
-        {status === "error" && <Error />}
+
         {status === "ready" && (
-          <StartScreen questionsLenght={questionsLenght} dispatch={dispatch} />
+          <StartScreen questionsLength={questionsLength} dispatch={dispatch} />
         )}
         {status === "active" && (
           <>
             <Progress
               index={index}
-              numQuestion={questionsLenght}
+              numQuestions={questionsLength}
               points={points}
               maxPoints={maxPoints}
               answer={answer}
@@ -117,9 +119,8 @@ export default function App() {
             />
             <Footer>
               <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
-              <NextButton dispatch={dispatch} answer={answer} index={index} numQuestions={questionsLenght} />
+              <NextButton dispatch={dispatch} answer={answer} index={index} numQuestions={questionsLength} />
             </Footer>
-
           </>
         )}
         {status === "finished" && (
